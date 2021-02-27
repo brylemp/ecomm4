@@ -22,11 +22,12 @@ app.use(session({
     saveUninitialized: true,
     cookie: { 
         secure: false,
-        maxAge: 999999*60*1000 //10 mins
+        maxAge: 10*60*1000 //10 mins
     }
 }))
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
+// app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
 
+app.use(express.static('./client/build'))
 app.use('/api/product',productRouter)
 app.use('/api/fproduct',featuredProductRouter)
 app.use('/api/cart',cartRouter)
