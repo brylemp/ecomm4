@@ -47,7 +47,7 @@ function CartPage(props) {
   const [color, setColor] = useState("#ffffff");
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/cart', { withCredentials: true })
+    axios.get('/api/cart', { withCredentials: true })
       .then(response => {
         setCart(response.data.cart)
         setLoading(false)
@@ -55,7 +55,7 @@ function CartPage(props) {
   }, [])
 
   const addItem = () => {
-    axios.post('http://localhost:3001/api/cart/addItem/60086c23afa4b81c48350670', {
+    axios.post('/api/cart/addItem/60086c23afa4b81c48350670', {
       quantity: 1,
     }, { withCredentials: true })
       .then(response => {

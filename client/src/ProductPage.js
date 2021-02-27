@@ -6,6 +6,8 @@ import axios from 'axios'
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 
+//http://localhost:3001/api
+
 function ProductPage(props) {
 	const [product, setProducts] = useState({})
 	const [loading, setLoading] = useState(true)
@@ -13,7 +15,7 @@ function ProductPage(props) {
 	const { id } = useParams()
 
 	useEffect(() => {
-		axios.get(`http://localhost:3001/api/product/${id}`)
+		axios.get(`/api/product/${id}`)
 			.then((response) => {
 				console.log(response.data.product)
 				setProducts(response.data.product)

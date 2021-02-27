@@ -26,7 +26,7 @@ export function Products(props) {
   const [products, setProducts] = useState([])
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/product/all')
+    axios.get(`api/product/all`)
       .then((response) => {
         setProducts(response.data.products)
       })
@@ -45,7 +45,7 @@ export function FeaturedProducts(props) {
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/fproduct/all')
+    axios.get(`api/fproduct/all`)
       .then(response => {
         console.log(response.data.products)
         setFProducts(response.data.products)
