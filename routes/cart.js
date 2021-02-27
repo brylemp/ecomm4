@@ -30,8 +30,6 @@ router.get('/', (req,res)=>{
     }
 })
 
-// 60213a035988253250862c08 asus 
-// 600873ea8c6f2b0274eb64fb rakk
 router.post('/addItem/:id', async (req,res)=>{
     const product = await productModel.findById(req.params.id)
     const quantity = parseInt(req.body.quantity)
