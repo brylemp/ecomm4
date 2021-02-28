@@ -5,7 +5,7 @@ import axios from 'axios'
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 
-const baseURL = "http://localhost:3001/api" //http://localhost:3001/api
+const baseURL = "/api" //http://localhost:3001/api
 
 function CartCard({item, cart, setCart}){
   const changeQuantity = (e) =>{
