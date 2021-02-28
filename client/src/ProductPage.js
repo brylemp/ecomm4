@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Row, Col, Container } from 'reactstrap';
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import axios from 'axios'
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 
-const baseURL = "/api" //http://localhost:3001/api
+const baseURL = "http://localhost:3001/api" //http://localhost:3001/api
 
 function ProductPage(props) {
 	const [product, setProducts] = useState({})
 	const [loading, setLoading] = useState(true)
 	const [color, setColor] = useState("#ffffff");
 	const { id } = useParams()
+  const history = useHistory()
 
 	useEffect(() => {
 		axios.get(`${baseURL}/product/${id}`)
@@ -22,6 +23,18 @@ function ProductPage(props) {
 				setLoading(false)
 			})
 	}, []);
+
+  const addToCart = (e) => {
+    e.preventDefault()
+    console.log(e.target.quantity.value)
+    axios.post(`${baseURL}/cart/addItem/${product._id}`,
+    { quantity:e.target.quantity.value }, { withCredentials: true })
+      .then(response => {
+        console.log(response)
+        history.push('/cart')
+      })
+      .catch(error => console.log(error))
+  }
 
 	const override = css`
 			display: block;
@@ -40,9 +53,9 @@ function ProductPage(props) {
 						<h1>{product.title}</h1>
 						<h2>₱{typeof (product.price) === 'undefined' ? '' : product.price.toLocaleString()} </h2>
 						<b>AVAILABLE</b>
-						<form method="POST" className="mt-5">
+						<form method="POST" className="mt-5" onSubmit={addToCart}>
 							<div>
-								<input className="mb-2 number-input" type="number" name="quantity" />
+								<input className="mb-2 number-input" type="number" name="quantity" defaultValue="1" onChange={(e)=>console.log(e.target.value)} />
 							</div>
 							<div>
 								<input type="submit" value="Add to Cart" className="btn btn-dark" />

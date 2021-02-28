@@ -5,9 +5,27 @@ import axios from 'axios'
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 
-const baseURL = "/api" //http://localhost:3001/api
+const baseURL = "http://localhost:3001/api" //http://localhost:3001/api
 
-function CartCard({item}){
+function CartCard({item, cart, setCart}){
+  const changeQuantity = (e) =>{
+    axios.put(`${baseURL}/cart/update/${item.productId}`,
+    { withCredentials: true })
+      .then(response => {
+        console.log('PUT',response)
+      })
+  }
+
+  const deleteItem = (e) =>{
+    e.preventDefault()
+    axios.delete(`${baseURL}/cart/delete/${item.productId}`,
+    { withCredentials: true })
+      .then(response => {
+        console.log(response)
+        setCart({items:response.data})
+      })
+  }
+  
   return (
     <Card className="border border-0 rounded-0 w-100 mb-2">
       <Row className="shadow-sm no-gutters" style={{height: "100%"}}>
@@ -19,10 +37,10 @@ function CartCard({item}){
             <Col md="4" className="align-middle">
               <CardTitle tag="h5">{item.title}</CardTitle>
             </Col>
-            <input className="number-input" type="number"/>
-            <h5 className="card-text">₱5,000</h5>
-            <form method="POST">
-                <button id="deleteButton"><i id="deleteIcon" className="las la-trash-alt" style={{ fontSize: "25px" }}></i></button>
+            <input className="number-input" type="number" defaultValue={item.quantity} min="0" onChange={changeQuantity}/>
+            <h5 className="card-text">₱{item.price.toLocaleString()}</h5>
+            <form method="POST" onSubmit={deleteItem}>
+                <button className="deleteButton"><i className="las la-trash-alt deleteIcon" style={{ fontSize: "25px" }}></i></button>
             </form>
           </CardBody>
         </Col>
@@ -37,7 +55,7 @@ function CheckOutSummaryCard({item}){
       <li className="list-group-item d-flex justify-content-between">
         {item.title}
         <div></div>
-        <span>₱1000 x 1</span>
+        <span>₱{item.price.toLocaleString()} x {item.quantity}</span>
       </li>
     </>
   )
@@ -55,6 +73,14 @@ function CartPage(props) {
         setLoading(false)
       })
   }, [])
+
+  const getTotal = () =>{
+    let total = 0
+    for(let item of cart.items){
+      total = total + (item.price * item.quantity)
+    }
+    return total
+  }
 
   const addItem = () => {
     axios.post(`${baseURL}/cart/addItem/60086c23afa4b81c48350670`, {
@@ -81,9 +107,8 @@ function CartPage(props) {
       <Row className="mt-2 pt-5 d-flex justify-content-center">
         <div id="error" className="alert alert-danger d-none"></div>
         <div id="message" className="alert alert-success d-none"></div>
-        {/* <div key={item.productId}>{item.productId} - {item.quantity}</div> */}
         <Col md="7" id="cartItems">
-          {cart.items.map(item => <CartCard key={item.productId} item={item}></CartCard>)}
+          {cart.items.map(item => <CartCard key={item.productId} item={item} cart={cart} setCart={setCart}></CartCard>)}
         </Col>
         <Col md="5">
           <Card className="rounded-0 w-100">
@@ -93,7 +118,6 @@ function CartPage(props) {
           </Card>
           <ul className="list-group rounded-0" id="summaryCheckout">
             {cart.items.map(item => <CheckOutSummaryCard key={item.productId} item={item}></CheckOutSummaryCard>)}
-            
             <li className="list-group-item d-flex justify-content-between">
               <h5>Delivery Fee</h5>
               <div></div>
@@ -102,12 +126,12 @@ function CartPage(props) {
             <li className="list-group-item d-flex justify-content-between">
               <h4>Total</h4>
               <div></div>
-              <b id="total">₱1100</b> 
+              <b id="total">₱{(getTotal()+100).toLocaleString()}</b> 
             </li>
           </ul>
-          <div class="mt-2 d-flex justify-content-end">
+          <div className="mt-2 d-flex justify-content-end">
             <form method="POST">
-              <button class="btn btn-dark" type="submit">Checkout</button>
+              <button className="btn btn-dark" type="submit">Checkout</button>
             </form>
           </div>
         </Col>
@@ -117,9 +141,9 @@ function CartPage(props) {
 
   return (
     <Container>
-      {/* <button onClick={material}>showCart</button>
-      <button onClick={addItem}>AddItem</button> */}
-      {loading ? <ClipLoader color={color} loading={loading} css={override} size={150} /> : material()}
+      <button onClick={showCart}>showCart</button>
+      <button onClick={addItem}>AddItem</button>
+      {loading ? <ClipLoader color={color} loading={loading} css={override} size={150} /> : (cart.items.length===0 ? <div>Empty Cart</div> : material())}
     </Container>
   )
 }

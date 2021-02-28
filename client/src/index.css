@@ -76,15 +76,15 @@ input.number-input[type=number]{
   width: 10%;
 }
 
-i#deleteIcon{
+i.deleteIcon{
   color: rgb(0, 0, 0);
 }
 
-button#deleteButton{
+button.deleteButton{
   outline: none;
 }
 
-button#deleteButton {
+button.deleteButton {
   background: none;
   border: none;
   color: blue;
@@ -94,10 +94,10 @@ button#deleteButton {
   font-family: serif;
 }
 
-button#deleteButton:focus {
+button.deleteButton:focus {
   outline: none;
 }
 
-button#deleteButton:active {
+button.deleteButton:active {
   color:red;
 }

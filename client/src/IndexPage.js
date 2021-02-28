@@ -10,7 +10,7 @@ import {
   CarouselIndicators
 } from 'reactstrap'
 
-const baseURL = "/api" //http://localhost:3001/api
+const baseURL = "http://localhost:3001/api" //http://localhost:3001/api
 
 export function Product({ product }) {
   return (

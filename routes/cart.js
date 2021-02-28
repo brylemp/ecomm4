@@ -14,13 +14,12 @@ function isLoggedIn(req,res,next){
 }
 
 router.get('/', (req,res)=>{
-    console.log(req.session)
+    console.log(req.sessionID,req.session.cart)
     if(!req.session.cart){
         req.session.cart = {
             items: [],
         }
     }
-    console.log(req.sessionID,req.session.cart)
     try{
         const cart =  req.session.cart
         res.json({cart,session:req.sessionID})
@@ -33,6 +32,8 @@ router.get('/', (req,res)=>{
 router.post('/addItem/:id', async (req,res)=>{
     const product = await productModel.findById(req.params.id)
     const quantity = parseInt(req.body.quantity)
+
+    console.log(req.sessionID)
 
     if(!req.session.cart){
         req.session.cart = {
@@ -70,22 +71,37 @@ router.post('/addItem/:id', async (req,res)=>{
     }
 })
 
-router.delete('/delete/:id', async (req,res)=>{
+router.delete('/delete/:id', (req,res)=>{
+    console.log(req.sessionID)
+    const { id } = req.params
+    const cart = req.session.cart
+
     try{
-        const cart = await cartModel.deleteOne({_id:req.params.id})
-        res.json({cart,msg:"Successfully deleted"})
-    }catch{
-        res.sendStatus(500)
+        const newItems = cart.items.filter(item => item.productId !== id)
+        req.session.cart.items = newItems
+        res.json(newItems)
     }
+    catch(e){
+        res.status(500).send({error:e})
+    }
+    
 })
 
-router.put('/update/:id', isLoggedIn, async (req,res)=>{
+router.put('/update/:id', (req,res)=>{
+    const { id } = req.params
+    const cart = req.session.cart
+    console.log(req.sessionID)
+
     try{
-        const cart = await cartModel.findByIdAndUpdate(req.params.id,{
-            items,
-            owner
-        } = req.body)
-        res.json({cart})
+        const newItems = cart.items.map(item => {
+            if(item.productId === id){
+                item.quantity = req.body.quantity
+            }
+            return item
+        })
+        req.session.cart.items = newItems
+        res.json(newItems)
+
     }catch(e){
         console.log(e)
         res.sendStatus(500)

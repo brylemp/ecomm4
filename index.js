@@ -21,13 +21,13 @@ app.use(session({
     secret: 'adfihjasdfl;1223',
     store: new MongoStore({ mongooseConnection: mongoose.connection, dbName: 'sessions' }),
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { 
         secure: false,
         maxAge: 10*60*1000 //10 mins
     }
 }))
-// app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
+app.use(cors({credentials: true, origin: 'http://localhost:3000', methods: ['GET', 'PUT', 'POST', 'DELETE']}))
 
 app.use(express.static('./client/build'))
 app.use('/api/product',productRouter)
