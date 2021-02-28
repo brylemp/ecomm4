@@ -5,6 +5,8 @@ import axios from 'axios'
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 
+const baseURL = "/api" //http://localhost:3001/api
+
 function CartCard({item}){
   return (
     <Card className="border border-0 rounded-0 w-100 mb-2">
@@ -47,7 +49,7 @@ function CartPage(props) {
   const [color, setColor] = useState("#ffffff");
 
   useEffect(() => {
-    axios.get('/api/cart', { withCredentials: true })
+    axios.get(`${baseURL}/cart`, { withCredentials: true })
       .then(response => {
         setCart(response.data.cart)
         setLoading(false)
@@ -55,7 +57,7 @@ function CartPage(props) {
   }, [])
 
   const addItem = () => {
-    axios.post('/api/cart/addItem/60086c23afa4b81c48350670', {
+    axios.post(`${baseURL}/cart/addItem/60086c23afa4b81c48350670`, {
       quantity: 1,
     }, { withCredentials: true })
       .then(response => {

@@ -10,6 +10,8 @@ import {
   CarouselIndicators
 } from 'reactstrap'
 
+const baseURL = "/api" //http://localhost:3001/api
+
 export function Product({ product }) {
   return (
     <Card className="rounded-0 shadow-sm card-width ml-2 mr-2 mt-2 mb-2">
@@ -26,7 +28,7 @@ export function Products(props) {
   const [products, setProducts] = useState([])
 
   useEffect(() => {
-    axios.get(`api/product/all`)
+    axios.get(`${baseURL}/product/all`)
       .then((response) => {
         setProducts(response.data.products)
       })
@@ -45,7 +47,7 @@ export function FeaturedProducts(props) {
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
-    axios.get(`api/fproduct/all`)
+    axios.get(`${baseURL}/fproduct/all`)
       .then(response => {
         console.log(response.data.products)
         setFProducts(response.data.products)

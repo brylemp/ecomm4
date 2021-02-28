@@ -31,6 +31,9 @@ app.use(express.static('./client/build'))
 app.use('/api/product',productRouter)
 app.use('/api/fproduct',featuredProductRouter)
 app.use('/api/cart',cartRouter)
+app.get('*', (req, res) => {
+    res.sendFile('./client/build/index.html')
+})
 
 app.listen(process.env.PORT || 3001)
 
