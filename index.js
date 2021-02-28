@@ -1,3 +1,5 @@
+const path = require('path')
+
 const express = require('express')
 const session = require('express-session')
 const mongoose = require('mongoose')
@@ -32,7 +34,7 @@ app.use('/api/product',productRouter)
 app.use('/api/fproduct',featuredProductRouter)
 app.use('/api/cart',cartRouter)
 app.get('*', (req, res) => {
-    res.sendFile('./client/build/index.html')
+    res.sendFile(path.join(__dirname,'/client/build/index.html'))
 })
 
 app.listen(process.env.PORT || 3001)
